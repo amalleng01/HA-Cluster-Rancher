@@ -1,0 +1,81 @@
+- name: Install MySQL on external DB
+  hosts: mysql
+  remote_user: usuario
+  become: yes
+  vars:
+          - mysql_bind_address: '*'
+          - mysql_port: 3306
+          - remote_host_ip: '%'
+  tasks:
+          - name: Install MySQL
+            apt:
+                    name: mysql-server
+                    state: present
+                    update_cache: yes
+
+          - name: Ensure mysql is started and enabled
+            service:
+                    name: mysql
+                    state: started
+                    enabled: yes
+
+          - name: Dependencies
+            apt:
+                    name: "{{ packets_mysql }}"
+                    state: present
+            vars:
+                    packets_mysql:
+                            - pip
+                            - python3
+                            - python2.7
+
+
+          - name: Make sure pymysql is present
+            pip:
+              name: pymysql
+              state: present
+          
+          - name: Change hostname
+            ansible.builtin.hostname:
+                    name: gollum
+
+          - name: Ensure mysql is configured to bind to the specified address and port
+            ini_file:
+              dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+              section: mysqld
+              option: "{{ item.option }}"
+              value: "{{ item.value }}"
+            with_items:
+              - { option: bind-address, value: "{{ mysql_bind_address }}" }
+              - { option: port, value: "{{ mysql_port }}" }
+          
+ 
+          - name: Create database k3s
+            mysql_db:
+                    name: k3s
+                    state: present
+                    login_user: root
+                    login_password: usuario
+                    encoding: latin1
+                    collate: latin1_swedish_ci;
+
+          - name: Create super user k3s
+            mysql_user:
+                    state: present
+                    login_password: usuario
+                    login_user: root
+                    name: k3s
+                    password: root
+                    priv: '*.*:ALL, GRANT'
+                    host: "{{ remote_host_ip }}"
+            notify:
+                    - restart mysql
+  
+  handlers:
+          - name: restart mysql
+            systemd:
+                    name: mysql
+                    state: restarded
+
+
+              
