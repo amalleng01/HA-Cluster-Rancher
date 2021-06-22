@@ -17,10 +17,10 @@ Si estas hosteando todas las máquinas en tu casa, como mi caso. Sería interesa
 ## Elementos y software ⚙️
 Una vez conoces por encima los elementos, antes de empezar con la instalación y configuración de estos vamos a hablar en profundidad de cada uno.
 
-* [Dropwizard] - Base de datos
-* [Maven] - Balanceador de cargas
-* [ROME] - Servidores maestros
-* [ROME] - Servidores esclavos
+* - Base de datos
+* - Balanceador de cargas
+* - Servidores maestros
+* - Servidores esclavos
 
 ### Base de datos
 La base de datos externa de nuestro cluster almacenará el estado de todos los pods de este. Es por eso que es uno de los elementos más importantes. Al ser una base de datos no tenemos redundancia, en el caso de que la base de datos "muera" no hace falta que diga lo que pasa acontinuación... Es por eso que una solución a esto sería crear la base de datos de alta disponibilidad con etcd en todas las máquinas maestro del cluster. Pero aquí no veremos esa arquitectura.
