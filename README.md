@@ -21,7 +21,11 @@ Una vez conoces por encima los elementos, antes de empezar con la instalación y
 La base de datos externa de nuestro cluster almacenará el estado de todos los pods de este. Es por eso que es uno de los elementos más importantes. Al ser una base de datos no tenemos redundancia, en el caso de que la base de datos "muera" no hace falta que diga lo que pasa acontinuación... Es por eso que una solución a esto sería crear la base de datos de alta disponibilidad con etcd en todas las máquinas maestro del cluster. Pero aquí no veremos esa arquitectura.
 
 ### Balanceador de cargas
+El balanceador de cargas es el primer elemento que proporciona el acceso al cluster. Cuando recibe una petición, este la distribuirá por cualquiera de los servidores maestros del cluster indicados. Gracias a este podrás exponer al exterior y acceder a cualquier servicio del cluster.
 
+### Servidor maestro y trabajador
+
+![arquitectura-k3s](https://it.baiked.com/wp-content/uploads/2019/04/a0393e038e774a18a79b0b8c2240f466.jpeg)
 
 ## Instalación
 
